@@ -1,8 +1,8 @@
 "use client";
 
 import { useReducedMotion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
-import { PreviewRail, type PreviewRailItem } from "@/components/ui/extended/preview-rail";
+import { type MouseEvent, useEffect, useMemo, useState } from "react";
+import { LineNav, type LineNavItem } from "@/components/ui/extended/line-nav";
 
 function slugify(text: string): string {
   return text.trim().replace(/\s+/g, "-").replace(/'/g, "").replace(/\?/g, "").toLowerCase();
@@ -89,53 +89,37 @@ interface TableOfContentsProps {
 
 export const TableOfContents = ({ content }: TableOfContentsProps) => {
   const sections = useMemo(() => extractSections(content), [content]);
-  const items = useMemo<PreviewRailItem[]>(
+  const items = useMemo<LineNavItem[]>(
     () =>
       sections.flatMap((section) => [
-        {
-          id: section.slug,
-          label: section.text,
-          ariaLabel: `Jump to ${section.text}`,
-          description: "Article section",
-        },
-        ...section.children.map((child) => ({
-          id: child.slug,
-          label: child.text,
-          ariaLabel: `Jump to ${child.text}`,
-          description: `Subsection of ${section.text}`,
-        })),
+        { title: section.text, href: `#${section.slug}` },
+        ...section.children.map((child) => ({ title: child.text, href: `#${child.slug}` })),
       ]),
     [sections]
   );
-  const slugs = useMemo(() => items.map((item) => item.id), [items]);
+  const slugs = useMemo(() => items.map((item) => item.href.slice(1)), [items]);
   const activeSlug = useActiveHeading(slugs);
   const reduceMotion = useReducedMotion();
 
   if (items.length < 2) return null;
 
-  const handleSelect = (item: PreviewRailItem) => {
-    const element = document.getElementById(item.id);
+  const handleSelect = (item: LineNavItem, event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const id = item.href.slice(1);
+    const element = document.getElementById(id);
     if (!element) return;
     element.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    window.history.replaceState(null, "", `#${item.id}`);
+    window.history.replaceState(null, "", `#${id}`);
   };
 
   return (
-    <PreviewRail
+    <LineNav
       label="Table of contents"
       items={items}
-      activeId={activeSlug ?? undefined}
-      highlightActive
-      onItemSelect={handleSelect}
-      renderPreview={(item) => (
-        <div className="rounded-lg border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur-xl">
-          <p className="text-xs font-medium text-card-foreground">{item.label}</p>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">{item.description}</p>
-        </div>
-      )}
-      previewSide="before"
-      className="pointer-events-none fixed top-1/2 right-0 z-40 w-[min(22rem,calc(100vw-1rem))] -translate-y-1/2 justify-end"
-      railClassName="pointer-events-auto"
+      activeHref={activeSlug ? `#${activeSlug}` : undefined}
+      scrollActiveIntoView={false}
+      onItemClick={handleSelect}
+      className="fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 lg:flex"
     />
   );
 };
