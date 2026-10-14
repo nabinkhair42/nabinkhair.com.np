@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+
+  // Cloudflare Workers can't run the sharp-based optimizer; serve images as-is.
+  // To optimize later, add a Cloudflare Images `IMAGES` binding (may incur cost).
+  images: { unoptimized: true },
 
   async headers() {
     return [
@@ -83,3 +88,6 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Enables Cloudflare bindings in `next dev` (no-op during production builds).
+initOpenNextCloudflareForDev();
