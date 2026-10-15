@@ -5,8 +5,7 @@
   "packageManager": "pnpm@12.11.2",
   "scripts": {
     "dev": "next dev -p 4000",
-    "build": "opennextjs-cloudflare build",
-    "next:build": "next build",
+    "build": "next build",
     "start": "next start",
     "lint": "biome check .",
     "format": "biome check --write .",
