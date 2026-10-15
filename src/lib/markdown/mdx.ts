@@ -1,13 +1,16 @@
-import fs from "fs";
 import matter from "gray-matter";
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
-import path from "path";
 import readingTime from "reading-time";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
+import { createHighlighter } from "shiki";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import blogData from "@/generated/blog-data.json";
 import { transformers } from "@/lib/markdown/highlight-code";
 
-const contentDirectory = path.join(process.cwd(), "/blog-content");
+// Markdown bundled at build (blog-content/*.mdx -> JSON) so posts render at request
+// time without filesystem access — Cloudflare Workers have no runtime fs.
+const posts = blogData as Record<string, string>;
 
 export interface BlogFrontmatter {
   title: string;
@@ -40,6 +43,9 @@ export const mdxOptions = {
           },
           keepBackground: false,
           transformers,
+          // Workers forbid runtime WASM; use shiki's pure-JS regex engine.
+          getHighlighter: (options: Parameters<typeof createHighlighter>[0]) =>
+            createHighlighter({ ...options, engine: createJavaScriptRegexEngine() }),
         },
       ],
     ],
@@ -47,36 +53,24 @@ export const mdxOptions = {
 } satisfies NonNullable<MDXRemoteProps["options"]>;
 
 export function getAllBlogSlugs(): string[] {
-  if (!fs.existsSync(contentDirectory)) {
-    return [];
-  }
-
-  const files = fs.readdirSync(contentDirectory);
-  return files.filter((file) => file.endsWith(".mdx")).map((file) => file.replace(/\.mdx$/, ""));
+  return Object.keys(posts);
 }
 
 export function getBlogPostBySlug(slug: string): BlogPost | null {
-  try {
-    const filePath = path.join(contentDirectory, `${slug}.mdx`);
-
-    if (!fs.existsSync(filePath)) {
-      return null;
-    }
-
-    const fileContents = fs.readFileSync(filePath, "utf8");
-    const { data, content } = matter(fileContents);
-
-    const readingTimeResult = readingTime(content);
-
-    return {
-      slug,
-      frontmatter: data as BlogFrontmatter,
-      content,
-      readingTime: readingTimeResult.text,
-    };
-  } catch {
+  const fileContents = posts[slug];
+  if (!fileContents) {
     return null;
   }
+
+  const { data, content } = matter(fileContents);
+  const readingTimeResult = readingTime(content);
+
+  return {
+    slug,
+    frontmatter: data as BlogFrontmatter,
+    content,
+    readingTime: readingTimeResult.text,
+  };
 }
 
 export function getAllBlogPosts(): BlogPost[] {

@@ -13,9 +13,13 @@ interface BlogPostPageProps {
   }>;
 }
 
+// Workers can't compile MDX at request time (both runtime WASM and eval are
+// blocked), so every post in blog-content/ is rendered from its markdown at
+// build; dynamicParams=false 404s unknown slugs instead of attempting runtime SSR.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
-  const slugs = getAllBlogSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return getAllBlogSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps) {

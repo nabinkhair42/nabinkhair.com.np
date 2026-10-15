@@ -1,11 +1,12 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
-// No ISR / "use cache" in this app (blog is SSG via generateStaticParams, the
-// s-maxage values are plain CDN cache headers), so no incremental cache / R2.
+// Blog posts are SSG (MDX compiled at build). Serve the prerendered pages from the
+// Worker's own static assets — no R2/KV, no extra cost, no revalidation needed.
 export default {
-  ...defineCloudflareConfig(),
+  ...defineCloudflareConfig({ incrementalCache: staticAssetsIncrementalCache }),
   // Run Next directly instead of OpenNext's default `pnpm build`, so our `build`
   // script can be `opennextjs-cloudflare build` (what Cloudflare CI runs) without
   // recursing. Standalone output is still forced by OpenNext (NEXT_PRIVATE_STANDALONE).
-  buildCommand: "npx next build",
+  buildCommand: "node scripts/gen-blog-data.mjs && npx next build",
 };
