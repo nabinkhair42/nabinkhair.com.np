@@ -6,15 +6,12 @@
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "nabinkhair-com-np"
-    }
-  ]
-  // GITHUB_TOKEN is a runtime secret (used by /api/github-contributions):
-  //   wrangler secret put GITHUB_TOKEN
-  // It is intentionally NOT listed in `vars` so it stays out of source control.
+      "service": "nabinkhair-com-np",
+    },
+  ],
 }
