@@ -62,7 +62,6 @@
       "**",
       "!node_modules",
       "!.next",
-      "!.open-next",
       "!src/generated",
       "!dist",
       "!out",

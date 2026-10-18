@@ -1,0 +1,74 @@
+---
+title: "Agent Skills"
+description: "Context engineering asked what an agent should see. Skills answer a different question: how do you give an agent a procedure it only reads when it needs it?"
+developer: "Nabin Khair"
+date: "2026-10-18"
+published: true
+image: "/blog/agents-skills.webp"
+tags:
+  [
+    "Agent Skills",
+    "SKILL.md",
+    "AI Agents",
+    "Claude Code",
+    "MCP",
+    "Context Engineering",
+    "Progressive Disclosure",
+    "Agent Design",
+  ]
+---
+
+I've been writing the same story in pieces for most of a year. First it was [prompt engineering](/blog/what-is-vibe-coding), getting the wording right. Then [context engineering](/blog/context-engineering-for-agents): deciding what the model sees on every turn of its loop. Then [harness engineering](/blog/ai-harness-engineering): the tools, sandboxes, and guardrails the model runs inside. Then [loop engineering](/blog/introduction-to-loop-engineering): the system that keeps going without you.
+
+Each one came from the same frustration. The model was fine. The thing around the model was not. Skills are the next piece, and they answer a question the earlier layers kept running into. How do you hand an agent one specific procedure, like the exact steps for deploying your app, without carrying all of it in the context window the whole time?
+
+## What a skill actually is
+
+A skill is a folder. That's the whole idea, and the fact that it's so plain is the point.
+
+Inside is a file called `SKILL.md`: a short header with a `name` and a `description`, then a body that is just instructions written for the agent to read. The folder can hold more if the skill needs it, like a `scripts/` directory for code it can run or a `references/` directory for detail the body links to.
+
+```text
+pdf-filling/
+├── SKILL.md          # name, description, and the how-to
+├── scripts/
+│   └── fill.py       # work the model shouldn't do by hand
+└── references/
+    └── field-map.md  # the long reference, loaded only if needed
+```
+
+No new runtime, no SDK, no schema beyond "write a Markdown file." If you can write a README, you can write a skill. Anthropic shipped skills as a Claude feature on October 16, 2025, then published the format as an [open standard at agentskills.io](https://agentskills.io/specification) two months later, for any agent platform to use. A shared format is worth more than a clever one.
+
+## The one idea that makes it work: progressive disclosure
+
+Here is the trap the earlier layers never got out of. To teach an agent fifty procedures, the obvious move is to put all fifty in the system prompt. Now every turn pays the token cost of all fifty, even the turns that use none of them. I wrote a whole post on [why that hurts the model's attention](/blog/context-engineering-for-agents). Stuffing the prompt is the problem, not the fix.
+
+Skills solve it with progressive disclosure, which just means the agent reads more only when it needs more. In three steps:
+
+1. **Always loaded: the name and description only.** A few dozen tokens each. The agent knows the skill exists and roughly when to reach for it, nothing more. Fifty skills cost fifty one-line summaries, not fifty manuals.
+2. **Loaded when it fires: the body.** When the task matches the description, the agent reads the full body of that one skill. Keep it under about 500 lines, or you're hiding the important parts in a wall of text.
+3. **Loaded on demand: the supporting files.** The long reference or big API doc sits in `references/` and gets read only if the body says it's needed for this task.
+
+This is context engineering, finally done for you. The expensive stuff only enters the window when it's relevant, and leaves the budget alone the rest of the time. We used to do this by hand on every build. Skills make it the default.
+
+## Skills are not MCP
+
+The question I get most is "isn't this just MCP?" No. MCP gives an agent new things it can do: a database connection, a tool that sends email. Without the server, the action is impossible.
+
+A skill gives an agent the know-how for something it can already do, done the way you want. The model can already read a PDF and write Python. The skill is the folder that says: for our invoices, the total is in the bottom-right table, run `scripts/fill.py`, and here's the field map if the layout looks off. You use both together. MCP wires in the tools. The skill is the playbook for using them well.
+
+## What writing a good one is like
+
+The craft lives in two places.
+
+The description is the most important line in the file. It's the only part the agent sees before it decides whether to open the skill at all. "Helps with documents" either never fires or fires on everything. A sharp description names the trigger: what the task looks like, what words the user uses, what files are in play. Get it wrong and your well-written body never gets read.
+
+And push the exact stuff into scripts. If a step has one correct way to be done, like parsing a date or formatting money, don't explain it in prose and hope. Put it in `scripts/` and run it. Prose is for judgment. Code is for the parts that shouldn't vary.
+
+## Why this is the piece that was missing
+
+The whole series has been one argument. The model is a fixed, excellent part, and almost all the engineering is in the environment you build around it. Context engineering shaped what it sees. Harness engineering shaped what it can touch. Loop engineering shaped how long it runs on its own.
+
+Skills are the first time a single piece of that environment became portable. A skill isn't tied to your app, your framework, or one vendor's agent. It's a folder you can commit to a repo, share with a teammate, and drop into a different agent, because it's just Markdown. The knowledge of how your team does a thing used to live in a senior engineer's head. Now it's a folder the agent reads exactly when the work calls for it, and ignores the rest of the time.
+
+That's the quiet 2026 shift. Not a smarter model, but a better way to hand the one we have the exact steps for the job in front of it. The best skill, like the best code, is the one the agent only reads when it actually needs to.

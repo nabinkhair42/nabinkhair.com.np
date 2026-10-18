@@ -88,8 +88,7 @@ export async function GET() {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        // GitHub requires a User-Agent (403 without one). Node adds a default;
-        // Cloudflare Workers don't, so set it explicitly.
+        // GitHub requires a User-Agent (403 without one); set it explicitly.
         "User-Agent": "nabinkhair.com.np",
       },
       body: JSON.stringify({ query }),

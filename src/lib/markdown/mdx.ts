@@ -8,8 +8,8 @@ import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import blogData from "@/generated/blog-data.json";
 import { transformers } from "@/lib/markdown/highlight-code";
 
-// Markdown bundled at build (blog-content/*.mdx -> JSON) so posts render at request
-// time without filesystem access — Cloudflare Workers have no runtime fs.
+// Markdown bundled at build (blog-content/*.mdx -> JSON) and imported statically, so
+// post content ships in the deploy bundle and renders without runtime fs access.
 const posts = blogData as Record<string, string>;
 
 export interface BlogFrontmatter {
@@ -43,7 +43,7 @@ export const mdxOptions = {
           },
           keepBackground: false,
           transformers,
-          // Workers forbid runtime WASM; use shiki's pure-JS regex engine.
+          // Use shiki's pure-JS regex engine (no WASM dependency at build/runtime).
           getHighlighter: (options: Parameters<typeof createHighlighter>[0]) =>
             createHighlighter({ ...options, engine: createJavaScriptRegexEngine() }),
         },

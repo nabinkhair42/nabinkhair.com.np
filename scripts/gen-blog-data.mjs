@@ -1,5 +1,5 @@
-// Bundles blog-content/*.mdx into src/generated/blog-data.json so the blog can
-// render from markdown at request time on Cloudflare Workers (no runtime fs).
+// Bundles blog-content/*.mdx into src/generated/blog-data.json, which mdx.ts imports
+// statically so post content ships in the deploy bundle (no runtime fs needed).
 // Runs before `next build` and `next dev`; regenerate by re-running either.
 import fs from "node:fs";
 import path from "node:path";
