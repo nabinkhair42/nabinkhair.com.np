@@ -1,16 +1,21 @@
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import readingTime from "reading-time";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
-import { createHighlighter } from "shiki";
-import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
-import blogData from "@/generated/blog-data.json";
 import { transformers } from "@/lib/markdown/highlight-code";
 
-// Markdown bundled at build (blog-content/*.mdx -> JSON) and imported statically, so
-// post content ships in the deploy bundle and renders without runtime fs access.
-const posts = blogData as Record<string, string>;
+const contentDir = path.join(process.cwd(), "blog-content");
+const posts: Record<string, string> = fs.existsSync(contentDir)
+  ? Object.fromEntries(
+      fs
+        .readdirSync(contentDir)
+        .filter((f) => f.endsWith(".mdx"))
+        .map((f) => [f.slice(0, -4), fs.readFileSync(path.join(contentDir, f), "utf8")])
+    )
+  : {};
 
 export interface BlogFrontmatter {
   title: string;
@@ -43,9 +48,6 @@ export const mdxOptions = {
           },
           keepBackground: false,
           transformers,
-          // Use shiki's pure-JS regex engine (no WASM dependency at build/runtime).
-          getHighlighter: (options: Parameters<typeof createHighlighter>[0]) =>
-            createHighlighter({ ...options, engine: createJavaScriptRegexEngine() }),
         },
       ],
     ],

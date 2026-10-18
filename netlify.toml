@@ -1,0 +1,4 @@
+# Skip the Turbopack build cache (never deployed) so secrets scanning doesn't flag
+# GITHUB_TOKEN there; deployed output is still scanned.
+[build.environment]
+  SECRETS_SCAN_OMIT_PATHS = ".next/cache/**,.netlify/.next/cache/**"

@@ -1,4 +1,3 @@
-export { Anthropic } from "./anthropic";
 export { Astro } from "./astro";
 export { default as AwsIcon } from "./aws";
 export { default as BashIcon } from "./bash";
@@ -25,9 +24,6 @@ export { default as NestjsIcon } from "./nestjs";
 export { default as NextJsIcon } from "./nextjs";
 export { default as NodeJsIcon } from "./nodejs";
 export { default as NpmIcon } from "./npm";
-export { default as OpenaiIcon } from "./openai";
-export { PerplexityAI } from "./perplexity";
-export { Playwright } from "./playright";
 export { default as PostgresqlIcon } from "./postgresql";
 export { default as PostmanIcon } from "./postman";
 export { default as PrismaIcon } from "./prisma";

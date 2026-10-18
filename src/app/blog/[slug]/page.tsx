@@ -13,8 +13,7 @@ interface BlogPostPageProps {
   }>;
 }
 
-// Every post in blog-content/ is rendered to a static page at build time;
-// dynamicParams=false 404s unknown slugs instead of attempting runtime SSR.
+// Posts are static; 404 unknown slugs instead of runtime SSR.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {

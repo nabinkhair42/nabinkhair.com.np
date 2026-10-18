@@ -3,9 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
-  // Images served as-is (no runtime optimizer). Drop this to use Next's
-  // image optimization on a host that supports it.
-  images: { unoptimized: true },
+  // Logos include first-party SVGs; allow them through the image optimizer.
+  images: { dangerouslyAllowSVG: true },
+
+  // Ship blog markdown into the bundles of the routes that read it at runtime.
+  outputFileTracingIncludes: {
+    "/api/markdown/**": ["./blog-content/**"],
+    "/feed.xml": ["./blog-content/**"],
+  },
 
   async headers() {
     return [
