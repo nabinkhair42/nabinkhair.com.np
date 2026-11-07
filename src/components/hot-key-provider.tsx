@@ -1,6 +1,6 @@
 "use client";
 
-import { useHotkey, useHotkeySequence } from "@tanstack/react-hotkeys";
+import { useHotkey } from "@tanstack/react-hotkeys";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { DeveloperDetails } from "@/dev-constants/details";
@@ -26,7 +26,7 @@ export const HotKeyProvider = ({ children }: { children: React.ReactNode }) => {
     router.push("/");
   });
 
-  useHotkeySequence(["G", "H"], () => {
+  useHotkey(["G", "H"], () => {
     if (isTypingInField()) return;
     window.open(githubUrl, "_blank", "noopener,noreferrer");
   });

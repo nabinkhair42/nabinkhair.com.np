@@ -21,12 +21,12 @@ A personal site built to feel like a product — not a theme with my name droppe
 
 ## Highlights
 
-| Area | Details |
-|------|---------|
-| **Blog** | Shiki code blocks, Mermaid diagrams, reading time, floating TOC, RSS at `/feed.xml` |
-| **Portfolio** | Expandable experience/projects timelines, stack grid, templates, contribution graph |
-| **UX** | Scroll-morphing header, dark/light/system theme, keyboard shortcuts, reduced-motion support |
-| **SEO** | JSON-LD, per-post OG images, sitemap, robots |
+| Area          | Details                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| **Blog**      | Shiki code blocks, Mermaid diagrams, reading time, floating TOC, RSS at `/feed.xml`         |
+| **Portfolio** | Expandable experience/projects timelines, stack grid, templates, contribution graph         |
+| **UX**        | Scroll-morphing header, dark/light/system theme, keyboard shortcuts, reduced-motion support |
+| **SEO**       | JSON-LD, per-post OG images, sitemap, robots                                                |
 
 ## Stack
 
@@ -48,35 +48,35 @@ pnpm typecheck  # tsc
 
 **Env (optional)**
 
-| Variable | Purpose |
-|----------|---------|
+| Variable       | Purpose                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------------ |
 | `GITHUB_TOKEN` | PAT with `read:user` — powers the 12-month contribution graph. Site works fine without it. |
 
 ## Where content lives
 
 Forking or adapting? Edit these — nothing else required.
 
-| Path | Content |
-|------|---------|
-| `blog-content/*.mdx` | Blog posts |
-| `src/dev-constants/details.ts` | Bio, socials, education |
-| `src/dev-constants/experience.ts` | Work history |
-| `src/dev-constants/projects.ts` | Projects |
-| `src/dev-constants/stack.ts` | Tech stack |
-| `src/dev-constants/templates.ts` | Template cards |
+| Path                              | Content                 |
+| --------------------------------- | ----------------------- |
+| `blog-content/*.mdx`              | Blog posts              |
+| `src/dev-constants/details.ts`    | Bio, socials, education |
+| `src/dev-constants/experience.ts` | Work history            |
+| `src/dev-constants/projects.ts`   | Projects                |
+| `src/dev-constants/stack.ts`      | Tech stack              |
+| `src/dev-constants/templates.ts`  | Template cards          |
 
 New blog post → add an `.mdx` file with `title`, `description`, `date`, and optional `image` in frontmatter. It shows up on `/blog` and in the RSS feed automatically.
 
 ## Keyboard shortcuts
 
-| Key | Action |
-|-----|--------|
-| `H` | Home |
-| `B` | Blog |
-| `E` | Email |
-| `R` | Resume |
-| `G` → `H` | GitHub |
-| `D` | Toggle theme |
+| Key       | Action       |
+| --------- | ------------ |
+| `H`       | Home         |
+| `B`       | Blog         |
+| `E`       | Email        |
+| `R`       | Resume       |
+| `G` → `H` | GitHub       |
+| `D`       | Toggle theme |
 
 Disabled while typing in inputs.
 
