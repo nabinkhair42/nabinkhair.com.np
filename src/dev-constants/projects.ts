@@ -8,6 +8,7 @@ import {
   DrizzleOrmIcon,
   ExpressJsIcon,
   GithubIcon,
+  Hono,
   JavascriptIcon,
   JqueryIcon,
   JsonIcon,
@@ -34,6 +35,26 @@ import {
 import type { Projects } from "@/types";
 
 export const ProjectsData: Projects[] = [
+  {
+    icon: "/projects/hitch.svg",
+    title: "Hitch",
+    tagline: "An AI assistant that works with the accounts you already have",
+    description:
+      "An AI assistant that works with the ChatGPT, Claude and Gemini accounts you already have. Chat with tools, skills, plugins and MCP servers, and set Schedules that run prompts for you on their own.",
+    liveLink: "https://hitchai.chat/",
+    techStack: [
+      { name: "AWS", icon: AwsIcon },
+      { name: "Cloudflare", icon: CloudflareIcon },
+      { name: "Drizzle ORM", icon: DrizzleOrmIcon },
+      { name: "Hono", icon: Hono },
+      { name: "Next.js", icon: NextJsIcon },
+      { name: "PostgreSQL", icon: PostgresqlIcon },
+      { name: "Turborepo", icon: TurborepoIcon },
+      { name: "TypeScript", icon: TypescriptIcon },
+      { name: "Vercel", icon: VercelIcon },
+      { name: "Zod", icon: ZodIcon },
+    ],
+  },
   {
     icon: "/projects/tallwatch.svg",
     title: "TallWatch",

@@ -15,6 +15,7 @@ export { default as FigmaIcon } from "./figma";
 export { default as GeminiIcon } from "./gemini";
 export { default as GithubIcon } from "./github";
 export { default as GoIcon } from "./go";
+export { default as Hono } from "./hono";
 export { default as JqueryIcon } from "./jquery";
 export { default as JavascriptIcon } from "./js";
 export { default as JsonIcon } from "./json";

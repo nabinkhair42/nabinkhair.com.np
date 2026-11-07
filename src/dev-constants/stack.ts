@@ -1,14 +1,11 @@
 import {
   Astro,
   AwsIcon,
-  BashIcon,
   BetterAuth,
   CloudflareIcon,
   Docker,
   DrizzleOrmIcon,
   ExpressJsIcon,
-  FastAPI,
-  FigmaIcon,
   JavascriptIcon,
   ModelContextProtocol,
   MongodbIcon,
@@ -18,7 +15,6 @@ import {
   PostgresqlIcon,
   PrismaIcon,
   PythonIcon,
-  Railway,
   ReactIcon,
   ReactQueryIcon,
   Redis,
@@ -27,21 +23,17 @@ import {
   TailwindCssIcon,
   TurborepoIcon,
   ZodIcon,
-  ZustandIcon,
 } from "@/icons/tech";
 import type { TechStack } from "@/types";
 
 export const TechStacksList: TechStack[] = [
   { name: "AWS", icon: AwsIcon },
   { name: "Astro", icon: Astro },
-  { name: "Bash", icon: BashIcon },
   { name: "Better Auth", icon: BetterAuth },
   { name: "Cloudflare", icon: CloudflareIcon },
   { name: "Docker", icon: Docker },
   { name: "Drizzle", icon: DrizzleOrmIcon },
   { name: "Express.js", icon: ExpressJsIcon },
-  { name: "FastAPI", icon: FastAPI },
-  { name: "Figma", icon: FigmaIcon },
   { name: "JavaScript", icon: JavascriptIcon },
   { name: "MCP", icon: ModelContextProtocol },
   { name: "MongoDB", icon: MongodbIcon },
@@ -51,7 +43,6 @@ export const TechStacksList: TechStack[] = [
   { name: "PostgreSQL", icon: PostgresqlIcon },
   { name: "Python", icon: PythonIcon },
   { name: "Prisma", icon: PrismaIcon },
-  { name: "Railway", icon: Railway },
   { name: "React.js", icon: ReactIcon },
   { name: "TanStack Query", icon: ReactQueryIcon },
   { name: "Redis", icon: Redis },
@@ -60,5 +51,4 @@ export const TechStacksList: TechStack[] = [
   { name: "Tailwind", icon: TailwindCssIcon },
   { name: "Turborepo", icon: TurborepoIcon },
   { name: "Zod", icon: ZodIcon },
-  { name: "Zustand", icon: ZustandIcon },
 ];
