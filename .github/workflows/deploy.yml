@@ -57,12 +57,16 @@ jobs:
           SSH_OPTS="-i ~/.ssh/id_deploy -o IdentitiesOnly=yes"
           ssh $SSH_OPTS "$TARGET" "mkdir -p /opt/apps/$APP"
           scp $SSH_OPTS ./deploy/compose.yml "$TARGET:/opt/apps/$APP/compose.yml"
+          # The registry token goes over stdin into a throwaway DOCKER_CONFIG, so it never
+          # appears in the remote command line and is not left on the VM.
           ssh $SSH_OPTS "$TARGET" "
             set -e
-            echo '$GHCR_TOKEN' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+            export DOCKER_CONFIG=\$(mktemp -d)
+            trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT
+            docker login ghcr.io -u '${{ github.actor }}' --password-stdin
             cd /opt/apps/$APP
             export TAG=${{ github.sha }}
             docker compose pull
             docker compose up -d --remove-orphans
             docker image prune -f
-          "
+          " <<< "$GHCR_TOKEN"
