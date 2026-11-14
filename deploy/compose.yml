@@ -1,0 +1,13 @@
+# Deployed to /opt/apps/portfolio on the VM by .github/workflows/deploy.yml.
+# Secrets live in /opt/apps/portfolio/.env on the VM (not in git).
+services:
+  app:
+    image: ghcr.io/nabinkhair42/portfolio:${TAG:-latest}
+    container_name: portfolio
+    restart: unless-stopped
+    env_file: .env
+    networks: [web]
+
+networks:
+  web:
+    external: true
